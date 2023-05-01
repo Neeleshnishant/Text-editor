@@ -1,74 +1,100 @@
-import React, {useState} from 'react'
+import {Component} from 'react'
+import './TextEditor.css'
 
-function TextEditor() {
-  const [text, setText] = useState('')
-  const [isBold, setIsBold] = useState(false)
-  const [isItalic, setIsItalic] = useState(false)
-  const [isUnderline, setIsUnderline] = useState(false)
-
-  const handleBoldClick = () => {
-    setIsBold(!isBold)
+class TextEditor extends Component {
+  state = {
+    boldActive: false,
+    italicActive: false,
+    underlineActive: false,
   }
 
-  const handleItalicClick = () => {
-    setIsItalic(!isItalic)
+  handleBoldClick = () => {
+    this.setState(prevState => ({
+      boldActive: !prevState.boldActive,
+    }))
   }
 
-  const handleUnderlineClick = () => {
-    setIsUnderline(!isUnderline)
+  handleItalicClick = () => {
+    this.setState(prevState => ({
+      italicActive: !prevState.italicActive,
+    }))
   }
 
-  const handleChange = event => {
-    setText(event.target.value)
+  handleUnderlineClick = () => {
+    this.setState(prevState => ({
+      underlineActive: !prevState.underlineActive,
+    }))
   }
 
-  const boldStyle = isBold ? {fontWeight: 'bold'} : {}
-  const italicStyle = isItalic ? {fontStyle: 'italic'} : {}
-  const underlineStyle = isUnderline ? {textDecoration: 'underline'} : {}
+  getStyle = () => {
+    const style = {}
+    const {boldActive, italicActive, underlineActive} = this.state
+    if (boldActive) {
+      style.fontWeight = 'bold'
+    } else {
+      style.fontWeight = 'normal'
+    }
+    if (italicActive) {
+      style.fontStyle = 'italic'
+    } else {
+      style.fontStyle = 'normal'
+    }
+    if (underlineActive) {
+      style.textDecoration = 'underline'
+    } else {
+      style.textDecoration = 'normal'
+    }
+    return style
+  }
 
-  return (
-    <div>
-      <h1>Text Editor</h1>
-      <img
-        src="https://assets.ccbp.in/frontend/react-js/text-editor-img.png"
-        alt="text editor"
-      />
-      <ul>
-        <li>
-          <button
-            style={{backgroundColor: isBold ? '#f1f5f9' : '#faff00'}}
-            onClick={handleBoldClick}
-            data-testid="bold"
-          >
-            B
-          </button>
-        </li>
-        <li>
-          <button
-            style={{backgroundColor: isItalic ? '#faff00' : '#f1f5f9'}}
-            onClick={handleItalicClick}
-            data-testid="italic"
-          >
-            I
-          </button>
-        </li>
-        <li>
-          <button
-            style={{backgroundColor: isUnderline ? '#faff00' : '#f1f5f9'}}
-            onClick={handleUnderlineClick}
-            data-testid="underline"
-          >
-            U
-          </button>
-        </li>
-        <textarea
-          style={{...boldStyle, ...italicStyle, ...underlineStyle}}
-          value={text}
-          onChange={handleChange}
+  render() {
+    const {boldActive, italicActive, underlineActive} = this.state
+    console.log(underlineActive)
+    return (
+      <div className="editor">
+        <h1>Text editor</h1>
+        <img
+          src="https://assets.ccbp.in/frontend/react-js/text-editor-img.png"
+          alt="text editor"
         />
-      </ul>
-    </div>
-  )
+        <div className="toolbar">
+          <ul>
+            <li>
+              <button
+                className={boldActive ? 'active' : 'inactive'}
+                onClick={this.handleBoldClick}
+                data-testid="bold"
+                type="button"
+              >
+                B
+              </button>
+            </li>
+            <li>
+              <button
+                className={italicActive ? 'active' : ''}
+                onClick={this.handleItalicClick}
+                data-testid="italic"
+                type="button"
+              >
+                I
+              </button>
+            </li>
+            <li>
+              <button
+                className={underlineActive ? 'active' : ''}
+                onClick={this.handleUnderlineClick}
+                data-testid="underline"
+                type="button"
+              >
+                U
+              </button>
+            </li>
+          </ul>
+        </div>
+        <textarea style={this.getStyle()} />
+      </div>
+    )
+  }
 }
 
 export default TextEditor
